@@ -92,3 +92,9 @@ type TransactionOutSet struct {
 	HashSerialized  string  `json:"hash_serialized"`
 	TotalAmount     float64 `json:"total_amount"`
 }
+
+// Bitcore Additions
+type Getaddressbalance struct {
+	Balance  int64 `json:"balance"`
+	Received int64 `json:"received"`
+}

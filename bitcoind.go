@@ -8,7 +8,6 @@ import (
 	"strconv"
 )
 
-
 const (
 	// VERSION represents bicoind package version
 	VERSION = 0.1
@@ -21,10 +20,24 @@ type Bitcoind struct {
 	client *rpcClient
 }
 
+//Chris's Bitcoire Stuff
+func (b *Bitcoind) XGetBalance(account string, minconf uint64) (balance Getaddressbalance, err error) {
+	adds := []string{"myX9UXrqHh5qz4YupqeUKTk5HQ7ZbWUBLv"}
+	//parm := map[string][]string{"addresses": adds}
+
+	r, err := b.client.call("getaddressbalance", adds)
+	if err = handleError(err, &r); err != nil {
+		return
+	}
+	err = json.Unmarshal(r.Result, &balance)
+	//balance, err = strconv.ParseFloat(string(r.Result), 64)
+	return
+}
+
 // New return a new bitcoind
 func New(host string, port int, user, passwd string, useSSL bool, timeoutParam ...int) (*Bitcoind, error) {
 	var timeout int = RPCCLIENT_TIMEOUT
-	// If the timeout is specified in timeoutParam, allow it. 
+	// If the timeout is specified in timeoutParam, allow it.
 	if len(timeoutParam) != 0 {
 		timeout = timeoutParam[0]
 	}
@@ -167,8 +180,6 @@ func (b *Bitcoind) GetBlockTemplate(capabilities []string, mode string) (templat
 	return
 }
 
-
-
 type ChainTip struct {
 	// The height of the current tip
 	Height int
@@ -301,7 +312,6 @@ func (b *Bitcoind) GetRawMempool() (txId []string, err error) {
 	return
 }
 
-
 type VerboseTx struct {
 	// Virtual transaction size as defined in BIP 141
 	Size uint32
@@ -311,7 +321,7 @@ type VerboseTx struct {
 	ModifiedFee float64
 	// Local time when tx entered pool
 	Time uint32
-	// Block height when tx entered pool 
+	// Block height when tx entered pool
 	Height uint32
 	// Number of inpool descendents (including this one)
 	DescendantCount uint32
@@ -742,4 +752,3 @@ func (b *Bitcoind) WalletPassphraseChange(oldPassphrase, newPassprhase string) e
 	r, err := b.client.call("walletpassphrasechange", []interface{}{oldPassphrase, newPassprhase})
 	return handleError(err, &r)
 }
- 
