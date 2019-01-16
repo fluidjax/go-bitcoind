@@ -98,3 +98,12 @@ type Getaddressbalance struct {
 	Balance  int64 `json:"balance"`
 	Received int64 `json:"received"`
 }
+
+type UTXO struct {
+	Address     string `json:"address"`
+	Txid        string `json:"txid"`
+	OutputIndex int64  `json:"outputIndex"`
+	Script      string `json:"script"`
+	Satoshis    int64  `json:"satoshis"`
+	Height      int64  `json:"height"`
+}

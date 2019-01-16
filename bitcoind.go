@@ -20,17 +20,24 @@ type Bitcoind struct {
 	client *rpcClient
 }
 
-//Chris's Bitcoire Stuff
-func (b *Bitcoind) XGetBalance(account string, minconf uint64) (balance Getaddressbalance, err error) {
-	adds := []string{"myX9UXrqHh5qz4YupqeUKTk5HQ7ZbWUBLv"}
-	//parm := map[string][]string{"addresses": adds}
-
+//Chris's Bitcore Stuff
+func (b *Bitcoind) GetAddressBalance(address string) (balance Getaddressbalance, err error) {
+	adds := []string{address}
 	r, err := b.client.call("getaddressbalance", adds)
 	if err = handleError(err, &r); err != nil {
 		return
 	}
 	err = json.Unmarshal(r.Result, &balance)
-	//balance, err = strconv.ParseFloat(string(r.Result), 64)
+	return
+}
+
+func (b *Bitcoind) GetAddressUTXOs(address string) (utxo []UTXO, err error) {
+	adds := []string{address}
+	r, err := b.client.call("getaddressutxos", adds)
+	if err = handleError(err, &r); err != nil {
+		return
+	}
+	err = json.Unmarshal(r.Result, &utxo)
 	return
 }
 
