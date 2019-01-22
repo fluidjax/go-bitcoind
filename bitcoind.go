@@ -20,7 +20,10 @@ type Bitcoind struct {
 	client *rpcClient
 }
 
-//Chris's Bitcore Stuff
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////// QREDO Additions for Bitcore & QredoHDWallet  - Chris Morris 01/2019
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 func (b *Bitcoind) GetAddressBalance(address string) (balance Getaddressbalance, err error) {
 	adds := []string{address}
 	r, err := b.client.call("getaddressbalance", adds)
@@ -31,7 +34,7 @@ func (b *Bitcoind) GetAddressBalance(address string) (balance Getaddressbalance,
 	return
 }
 
-func (b *Bitcoind) GetAddressUTXOs(address string) (utxo []UTXO, err error) {
+func (b *Bitcoind) GetAddressUTXOs(address string) (utxo []ExtendedUTXO, err error) {
 	adds := []string{address}
 	r, err := b.client.call("getaddressutxos", adds)
 	if err = handleError(err, &r); err != nil {
@@ -40,6 +43,21 @@ func (b *Bitcoind) GetAddressUTXOs(address string) (utxo []UTXO, err error) {
 	err = json.Unmarshal(r.Result, &utxo)
 	return
 }
+
+func (b *Bitcoind) SendRawTransaction(hexTX string) (txid string, err error) {
+	tx := []string{hexTX}
+	r, err := b.client.call("sendrawtransaction", tx)
+	if err = handleError(err, &r); err != nil {
+		return
+	}
+	embededString := string(r.Result)
+	var res = embededString[1 : len(embededString)-1]
+	return res, nil
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////// END OF QREDO CHANGES
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // New return a new bitcoind
 func New(host string, port int, user, passwd string, useSSL bool, timeoutParam ...int) (*Bitcoind, error) {

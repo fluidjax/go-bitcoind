@@ -1,5 +1,7 @@
 package bitcoind
 
+import "github.com/btcsuite/btcd/btcec"
+
 // A ScriptSig represents a scriptsyg
 type ScriptSig struct {
 	Asm string `json:"asm"`
@@ -93,17 +95,26 @@ type TransactionOutSet struct {
 	TotalAmount     float64 `json:"total_amount"`
 }
 
-// Bitcore Additions
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////// QREDO Additions for Bitcore & QredoHDWallet  - Chris Morris 01/2019
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 type Getaddressbalance struct {
 	Balance  int64 `json:"balance"`
 	Received int64 `json:"received"`
 }
 
-type UTXO struct {
+type ExtendedUTXO struct {
 	Address     string `json:"address"`
 	Txid        string `json:"txid"`
 	OutputIndex int64  `json:"outputIndex"`
 	Script      string `json:"script"`
 	Satoshis    int64  `json:"satoshis"`
 	Height      int64  `json:"height"`
+	PrivateKey  *btcec.PrivateKey
+	UTXOScript  []byte
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////// End of QREDO changes
+///////////////////////////////////////////////////////////////////////////////////////////////////
